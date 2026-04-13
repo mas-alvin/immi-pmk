@@ -67,10 +67,10 @@ export const useMemberPayments = (bulan: string, tahun: string) => {
       await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: import.meta.env.DEV ? 'cors' : 'no-cors',
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, action: 'addIuran' }),
       });
       toast.success('Setoran iuran berhasil disimpan!');
-      setTimeout(fetchPayments, 1500); // Sinkronisasi ulang
+      setTimeout(fetchPayments, 1500); 
     } catch (error) {
       toast.error('Gagal mengirim iuran');
     } finally {

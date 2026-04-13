@@ -32,7 +32,7 @@ export const Combobox = ({ options, value, onChange, placeholder }: ComboboxProp
     <div className="relative" ref={containerRef}>
       <div 
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-6 py-4 rounded-3xl bg-slate-50 border border-slate-100 cursor-pointer flex items-center justify-between group transition-all ${isOpen ? 'ring-4 ring-primary-500/10 border-primary-500' : ''}`}
+        className={`w-full px-6 py-4 rounded-lg bg-slate-50 border border-slate-100 cursor-pointer flex items-center justify-between group transition-all ${isOpen ? 'ring-4 ring-primary-500/10 border-primary-500' : ''}`}
       >
         <span className={`font-bold ${value ? 'text-slate-800' : 'text-slate-400'}`}>
           {value || placeholder}
@@ -46,7 +46,7 @@ export const Combobox = ({ options, value, onChange, placeholder }: ComboboxProp
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute z-[60] left-0 right-0 mt-2 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden"
+            className="absolute z-[60] left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl border border-slate-100 overflow-hidden"
           >
             <div className="p-4 border-b border-slate-50 flex items-center gap-3">
               <Search className="text-slate-400" size={18} />
@@ -69,7 +69,7 @@ export const Combobox = ({ options, value, onChange, placeholder }: ComboboxProp
                       setIsOpen(false);
                       setSearch('');
                     }}
-                    className={`px-4 py-3 rounded-2xl cursor-pointer font-bold text-sm transition-colors ${
+                    className={`px-4 py-3 rounded-lg cursor-pointer font-bold text-sm transition-colors ${
                       value === opt ? 'bg-primary-50 text-primary-600' : 'hover:bg-slate-50 text-slate-600'
                     }`}
                   >

@@ -16,3 +16,12 @@ export interface MonthlyStats {
   totalOffline: number;
   totalKas: number;
 }
+
+export interface LedgerEntry {
+  tanggal: string;
+  saldo: number; // Saldo awal (usually 0 except first)
+  masuk: number;
+  keluar: number;
+  sisa: number;
+  ket: string;
+}
