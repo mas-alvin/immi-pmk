@@ -1,4 +1,4 @@
-import { Wallet, LogOut } from 'lucide-react';
+import {LogOut } from 'lucide-react';
 
 export const Header = () => {
   return (
