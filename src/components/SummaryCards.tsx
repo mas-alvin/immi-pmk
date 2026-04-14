@@ -1,14 +1,15 @@
-import { ArrowDownRight, ArrowUpRight, Wallet, TrendingUp } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Wallet, TrendingUp, MinusCircle, PlusCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface SummaryCardsProps {
-  totalOnline: number;
-  totalOffline: number;
-  totalKas: number;
+  total1: number; // Iuran: Online | Catatan: Masuk
+  total2: number; // Iuran: Offline | Catatan: Keluar
+  total3: number; // Iuran: Total | Catatan: Sisa
   isLoading: boolean;
+  mode: 'iuran' | 'catatan';
 }
 
-export const SummaryCards = ({ totalOnline, totalOffline, totalKas, isLoading }: SummaryCardsProps) => {
+export const SummaryCards = ({ total1, total2, total3, isLoading, mode }: SummaryCardsProps) => {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -17,12 +18,11 @@ export const SummaryCards = ({ totalOnline, totalOffline, totalKas, isLoading }:
     }).format(amount);
   };
 
-  const cards = [
+  const cards = mode === 'iuran' ? [
     {
       title: 'Setoran Online',
-      amount: totalOnline,
+      amount: total1,
       icon: ArrowUpRight,
-      // Menggunakan gradasi dari biru tua ke biru yang sedikit lebih cerah
       gradient: 'from-blue-600 to-blue-800',
       iconBg: 'bg-white/20',
       textColor: 'text-white',
@@ -30,9 +30,8 @@ export const SummaryCards = ({ totalOnline, totalOffline, totalKas, isLoading }:
     },
     {
       title: 'Setoran Offline',
-      amount: totalOffline,
+      amount: total2,
       icon: ArrowDownRight,
-      // Menggunakan warna Amber/Orange yang hangat
       gradient: 'from-amber-500 to-orange-600',
       iconBg: 'bg-white/20',
       textColor: 'text-white',
@@ -40,13 +39,40 @@ export const SummaryCards = ({ totalOnline, totalOffline, totalKas, isLoading }:
     },
     {
       title: 'Total Saldo Kas',
-      amount: totalKas,
+      amount: total3,
       icon: Wallet,
-      // Menggunakan Emerald sesuai identitas "Hijau" yang biasanya identik dengan Kas
       gradient: 'from-emerald-600 to-teal-800',
       iconBg: 'bg-white/20',
       textColor: 'text-white',
       labelColor: 'text-emerald-100'
+    }
+  ] : [
+    {
+      title: 'Total Pemasukan',
+      amount: total1,
+      icon: PlusCircle,
+      gradient: 'from-emerald-500 to-green-700',
+      iconBg: 'bg-white/20',
+      textColor: 'text-white',
+      labelColor: 'text-emerald-100'
+    },
+    {
+      title: 'Total Pengeluaran',
+      amount: total2,
+      icon: MinusCircle,
+      gradient: 'from-rose-500 to-red-700',
+      iconBg: 'bg-white/20',
+      textColor: 'text-white',
+      labelColor: 'text-rose-100'
+    },
+    {
+      title: 'Total Sisa Saldo',
+      amount: total3,
+      icon: Wallet,
+      gradient: 'from-indigo-600 to-violet-800',
+      iconBg: 'bg-white/20',
+      textColor: 'text-white',
+      labelColor: 'text-indigo-100'
     }
   ];
 
@@ -57,7 +83,7 @@ export const SummaryCards = ({ totalOnline, totalOffline, totalKas, isLoading }:
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.1 }}
-          key={idx}
+          key={`${mode}-${idx}`}
           className={`relative overflow-hidden p-8 rounded-2xl shadow-2xl bg-linear-to-br ${card.gradient} group hover:translate-y-[-8px] transition-all duration-300`}
         >
           {/* Efek Cahaya Dekoratif di Background */}

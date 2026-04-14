@@ -61,10 +61,11 @@ function App() {
         </div>
 
         <SummaryCards 
-          totalOnline={activeTab === 'iuran' ? stats.totalOnline : ledgerStats.totalMasuk}
-          totalOffline={activeTab === 'iuran' ? stats.totalOffline : ledgerStats.totalKeluar}
-          totalKas={activeTab === 'iuran' ? stats.totalKas : ledgerStats.saldoAkhir}
+          total1={activeTab === 'iuran' ? stats.totalOnline : ledgerStats.totalMasuk}
+          total2={activeTab === 'iuran' ? stats.totalOffline : ledgerStats.totalKeluar}
+          total3={activeTab === 'iuran' ? stats.totalKas : ledgerStats.saldoAkhir}
           isLoading={activeTab === 'iuran' ? isIuranLoading : isLedgerLoading}
+          mode={activeTab}
         />
 
         <AnimatePresence mode="wait">

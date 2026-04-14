@@ -1,6 +1,6 @@
 import type { MemberPayment } from '../types';
 import { motion } from 'framer-motion';
-import { User, CreditCard } from 'lucide-react';
+import { User } from 'lucide-react';
 
 interface MemberTableProps {
   payments: MemberPayment[];
@@ -10,7 +10,7 @@ interface MemberTableProps {
   totalKas: number;
 }
 
-export const MemberTable = ({ payments, isLoading, totalOnline, totalOffline, totalKas }: MemberTableProps) => {
+export const MemberTable = ({ payments, isLoading }: MemberTableProps) => {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -84,20 +84,20 @@ export const MemberTable = ({ payments, isLoading, totalOnline, totalOffline, to
                   key={idx} 
                   className="group hover:bg-emerald-50/30 transition-colors"
                 >
-                  <td className="left-0 z-10 bg-white group-hover:bg-emerald-50/30 py-4 px-4 text-xs font-black text-slate-300 border-r border-slate-50 text-center">{m.no}</td>
-                  <td className="left-12 z-10 bg-white group-hover:bg-emerald-50/30 py-4 px-6 border-r border-slate-50">
+                  <td className="left-0 z-10 bg-white group-hover:bg-gray-400/30 py-4 px-4 text-xs font-black text-slate-900 border-r border-slate-50 text-center">{m.no}</td>
+                  <td className="left-12 z-10 bg-white group-hover:bg-gray-400/30 py-4 px-6 border-r border-slate-50">
                     <div className="flex flex-col">
                         <span className="text-sm font-black text-slate-700 group-hover:text-emerald-700 transition-colors uppercase tracking-tight">{m.nama}</span>
-                        <span className="text-[9px] text-slate-400 font-medium">ANGGOTA AKTIF</span>
+                        {/* <span className="text-[9px] text-slate-400 font-medium">ANGGOTA AKTIF</span> */}
                     </div>
                   </td>
                   
                   {/* Termin 1 */}
-                  <td className="py-4 px-2 text-center text-[11px] font-bold text-slate-400 italic">{formatDate(m.t1)}</td>
-                  <td className="py-4 px-2 text-center text-xs font-black text-emerald-600 bg-emerald-50/20">
+                  <td className="py-4 px-2 text-center group-hover:bg-gray-400/30 text-[11px] font-bold text-slate-400 italic">{formatDate(m.t1)}</td>
+                  <td className="py-4 px-2 text-center group-hover:bg-gray-400/30 text-xs font-black text-emerald-600 bg-emerald-50/20">
                     {m.v1 > 0 ? formatCurrency(m.v1).replace('Rp', '') : '-'}
                   </td>
-                  <td className="py-4 px-2 text-center">
+                  <td className="py-4 px-2 text-center group-hover:bg-gray-400/30">
                     <span className={`text-[9px] font-black px-2 py-1 rounded-full border ${
                         m.m1 === 'online' ? 'bg-blue-50 text-blue-600 border-blue-100' : 
                         m.m1 === 'offline' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'hidden'
@@ -107,11 +107,11 @@ export const MemberTable = ({ payments, isLoading, totalOnline, totalOffline, to
                   </td>
 
                   {/* Termin 2 */}
-                  <td className="py-4 px-2 text-center text-[11px] font-bold text-slate-400 italic">{formatDate(m.t2)}</td>
-                  <td className="py-4 px-2 text-center text-xs font-black text-blue-600 bg-blue-50/20">
+                  <td className="py-4 px-2 text-center group-hover:bg-gray-400/30 text-[11px] font-bold text-slate-400 italic">{formatDate(m.t2)}</td>
+                  <td className="py-4 px-2 text-center group-hover:bg-gray-400/30 text-xs font-black text-blue-600 bg-blue-50/20">
                     {m.v2 > 0 ? formatCurrency(m.v2).replace('Rp', '') : '-'}
                   </td>
-                  <td className="py-4 px-2 text-center">
+                  <td className="py-4 px-2 text-center group-hover:bg-gray-400/30">
                     <span className={`text-[9px] font-black px-2 py-1 rounded-full border ${
                         m.m2 === 'online' ? 'bg-blue-50 text-blue-600 border-blue-100' : 
                         m.m2 === 'offline' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'hidden'
@@ -121,7 +121,7 @@ export const MemberTable = ({ payments, isLoading, totalOnline, totalOffline, to
                   </td>
 
                   {/* Total */}
-                  <td className="py-4 px-4 text-center bg-slate-50/50 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+                  <td className="py-4 px-4 text-center bg-slate-50/50 group-hover:bg-emerald-600 group-hover:text-white">
                     <div className="flex items-center justify-center gap-1 font-black text-sm tracking-tighter">
                         {totalPerPerson > 0 ? formatCurrency(totalPerPerson) : '-'}
                     </div>
@@ -132,9 +132,9 @@ export const MemberTable = ({ payments, isLoading, totalOnline, totalOffline, to
           </tbody>
 
           {/* New Modern Footer */}
-          <tfoot>
+          {/* <tfoot>
             <tr className="bg-slate-900">
-                <td colSpan={2} className="p-8 sticky left-0 z-20 bg-slate-900 border-t border-slate-800">
+                <td colSpan={2} className="p-8 left-0 z-20 bg-slate-900 border-t border-slate-800">
                     <div className="flex items-center gap-4">
                         <div className="bg-emerald-500/20 p-3 rounded-2xl border border-emerald-500/30">
                             <CreditCard className="text-emerald-400" size={24}/>
@@ -158,7 +158,7 @@ export const MemberTable = ({ payments, isLoading, totalOnline, totalOffline, to
                     <p className="text-white font-black text-2xl text-center tracking-tighter shadow-emerald-900">{formatCurrency(totalKas)}</p>
                 </td>
             </tr>
-          </tfoot>
+          </tfoot> */}
         </table>
       </div>
     </div>

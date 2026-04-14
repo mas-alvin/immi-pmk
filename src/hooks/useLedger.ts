@@ -40,9 +40,9 @@ export const useLedger = () => {
 
   const stats = useMemo(() => {
     return entries.reduce((acc, curr) => {
-      acc.totalMasuk += curr.masuk;
-      acc.totalKeluar += curr.keluar;
-      acc.saldoAkhir = curr.sisa;
+      acc.totalMasuk += Number(curr.masuk || 0);
+      acc.totalKeluar += Number(curr.keluar || 0);
+      acc.saldoAkhir = Number(curr.sisa || 0);
       return acc;
     }, { totalMasuk: 0, totalKeluar: 0, saldoAkhir: 0 });
   }, [entries]);
