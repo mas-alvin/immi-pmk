@@ -1,6 +1,11 @@
-import {LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
-export const Header = () => {
+interface HeaderProps {
+  onLogout?: () => void;
+  user?: { nama: string } | null;
+}
+
+export const Header = ({ onLogout, user }: HeaderProps) => {
   return (
     <header className="sticky top-0 z-50 w-full mb-8">
       <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-lg shadow-slate-200/50" />
@@ -19,14 +24,18 @@ export const Header = () => {
         
         <div className="flex items-center gap-3">
           <div className="hidden md:flex flex-col items-end mr-4">
-            <span className="text-xs font-black text-slate-800 uppercase tracking-widest">Admin Panel</span>
+            <span className="text-xs font-black text-slate-800 uppercase tracking-widest">{user?.nama || 'Admin Panel'}</span>
             <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Sistem Online
             </span>
           </div>
-          <button className="bg-slate-100 p-3 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all">
-            <LogOut size={20} />
+          <button 
+            onClick={onLogout}
+            className="bg-slate-100 p-3 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all group"
+            title="Keluar dari sistem"
+          >
+            <LogOut size={20} className="group-hover:-translate-x-0.5 transition-transform" />
           </button>
         </div>
       </div>

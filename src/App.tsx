@@ -6,8 +6,10 @@ import { MemberTable } from './components/MemberTable';
 import { PaymentModal } from './components/PaymentModal';
 import { LedgerTable } from './components/LedgerTable';
 import { LedgerModal } from './components/LedgerModal';
+import { Login } from './components/Login';
 import { useMemberPayments } from './hooks/useMemberPayments';
 import { useLedger } from './hooks/useLedger';
+import { useAuth } from './hooks/useAuth';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,6 +20,8 @@ const getCurrentMonth = () => {
 };
 
 function App() {
+  const { user, isAuthenticated, isLoading: isAuthLoading, login, logout } = useAuth();
+  
   const [activeTab, setActiveTab] = useState<'iuran' | 'catatan'>('iuran');
   const [bulan, setBulan] = useState(getCurrentMonth());
   const [tahun, setTahun] = useState(new Date().getFullYear().toString());
@@ -27,7 +31,6 @@ function App() {
 
   const handleAddPayment = async (data: any) => {
     await addPayment(data);
-    // Refresh ledger after a short delay to match the internal refresh of useMemberPayments
     setTimeout(refreshLedger, 1600);
   };
 
@@ -35,9 +38,38 @@ function App() {
     return memberList.length > 0 ? memberList : payments.map(p => p.nama).sort();
   }, [memberList, payments]);
 
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <>
+        <Login onLogin={login} isLoading={isAuthLoading} />
+        <ToastContainer 
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          toastStyle={{ fontWeight: '900', textTransform: 'uppercase', fontSize: '12px', borderRadius: '8px' }}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
-      <Header />
+      <Header onLogout={logout} user={user} />
       
       <main className="container mx-auto px-4 pb-24">
         {/* Navigation Tabs */}
