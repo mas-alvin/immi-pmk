@@ -23,7 +23,13 @@ function App() {
   const [tahun, setTahun] = useState(new Date().getFullYear().toString());
   
   const { payments, memberList, stats, addPayment, isLoading: isIuranLoading } = useMemberPayments(bulan, tahun);
-  const { entries, stats: ledgerStats, addEntry, isLoading: isLedgerLoading } = useLedger();
+  const { entries, stats: ledgerStats, addEntry, isLoading: isLedgerLoading, refresh: refreshLedger } = useLedger();
+
+  const handleAddPayment = async (data: any) => {
+    await addPayment(data);
+    // Refresh ledger after a short delay to match the internal refresh of useMemberPayments
+    setTimeout(refreshLedger, 1600);
+  };
 
   const memberNames = useMemo(() => {
     return memberList.length > 0 ? memberList : payments.map(p => p.nama).sort();
@@ -102,7 +108,7 @@ function App() {
               
               <PaymentModal 
                 memberNames={memberNames} 
-                onAdd={addPayment} 
+                onAdd={handleAddPayment} 
                 isLoading={isIuranLoading}
                 currentBulan={bulan}
                 currentTahun={tahun}
