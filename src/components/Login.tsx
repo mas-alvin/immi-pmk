@@ -28,10 +28,11 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6 font-sans">
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden flex flex-col md:flex-row border border-slate-200">
+      {/* Container utama dengan rounded-lg */}
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden flex border border-slate-200">
         
-        {/* Sisi Kiri: Branding/Visual */}
-        <div className="w-full md:w-1/2 bg-indigo-700 p-12 text-white flex flex-col justify-between relative overflow-hidden">
+        {/* SISI KIRI (BIRU): Hidden di mobile, muncul di desktop (md:flex) */}
+        <div className="hidden md:flex w-1/2 bg-indigo-700 p-12 text-white flex-col justify-between relative overflow-hidden">
           {/* Dekorasi Abstract */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
           
@@ -40,7 +41,7 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
               <div className="bg-white/20 p-2 rounded-lg backdrop-blur-md">
                 <ShieldCheck size={28} className="text-white" />
               </div>
-              <h2 className="text-xl font-bold tracking-tight">AL-KAS IMMI</h2>
+              <h2 className="text-xl font-bold tracking-tight uppercase">AL-KAS IMMI</h2>
             </div>
             
             <motion.div
@@ -65,9 +66,15 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
           </div>
         </div>
 
-        {/* Sisi Kanan: Form Login */}
+        {/* SISI KANAN (FORM): Selalu muncul, lebar penuh di mobile (w-full) */}
         <div className="w-full md:w-1/2 p-8 md:p-14 bg-white">
-          <div className="mb-10">
+          <div className="mb-10 text-center md:text-left">
+            {/* Logo kecil muncul hanya di mobile sebagai pengganti sisi biru */}
+            <div className="md:hidden flex justify-center mb-6">
+                <div className="bg-indigo-600 p-3 rounded-lg shadow-lg shadow-indigo-200">
+                    <ShieldCheck size={32} className="text-white" />
+                </div>
+            </div>
             <h3 className="text-2xl font-bold text-slate-800 mb-2">Selamat Datang</h3>
             <p className="text-slate-500 text-sm">Silakan masukkan kredensial anda untuk masuk.</p>
           </div>
@@ -75,14 +82,14 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Username</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <div className="relative group">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={18} />
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="admin_immi"
-                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800 text-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800 text-sm font-medium"
                   required
                   disabled={busy}
                 />
@@ -90,17 +97,15 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+              <div className="relative group">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={18} />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800 text-sm"
+                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800 text-sm font-medium"
                   required
                   disabled={busy}
                 />
@@ -117,7 +122,7 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
             <button
               type="submit"
               disabled={busy}
-              className="w-full py-3.5 bg-indigo-600 text-white rounded-lg font-bold text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed group"
+              className="w-full py-3.5 bg-indigo-600 text-white rounded-lg font-bold text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed group active:scale-[0.98]"
             >
               {busy ? (
                 <Loader2 className="animate-spin" size={20} />
@@ -129,9 +134,9 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
               )}
             </button>
 
-            <div className="pt-6 border-t border-slate-100">
+            <div className="pt-6 border-t border-slate-100 mt-4">
               <p className="text-center text-slate-400 text-[10px] font-medium uppercase tracking-[0.15em]">
-                Immi Financial Management System &copy; 2024
+                Immi Financial Management System &copy; 2026
               </p>
             </div>
           </form>
