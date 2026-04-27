@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, User, Eye, EyeOff, Loader2, ShieldCheck } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, Loader2, ShieldCheck, ArrowRight } from 'lucide-react';
 
 interface LoginProps {
   onLogin: (username: string, password: string) => Promise<boolean>;
@@ -27,93 +27,116 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
   const busy = isLoading || isSubmitting;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden"
-      >
-        <div className="bg-indigo-600 p-10 text-white text-center relative overflow-hidden">
-          {/* Subtle Background Pattern */}
-          <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-32 h-32 bg-indigo-400 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
-          </div>
+    <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6 font-sans">
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden flex flex-col md:flex-row border border-slate-200">
+        
+        {/* Sisi Kiri: Branding/Visual */}
+        <div className="w-full md:w-1/2 bg-indigo-700 p-12 text-white flex flex-col justify-between relative overflow-hidden">
+          {/* Dekorasi Abstract */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
           
-          <motion.div 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', damping: 12 }}
-            className="inline-flex bg-white/20 p-4 rounded-2xl backdrop-blur-xl border border-white/20 mb-6"
-          >
-            <ShieldCheck size={40} className="text-white" />
-          </motion.div>
-          <h1 className="text-3xl font-black uppercase tracking-tighter mb-2">AL-KAS IMMI</h1>
-          <p className="text-indigo-100/70 text-[10px] font-black uppercase tracking-[0.3em]">Sistem Manajemen Keuangan Terpadu</p>
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="bg-white/20 p-2 rounded-lg backdrop-blur-md">
+                <ShieldCheck size={28} className="text-white" />
+              </div>
+              <h2 className="text-xl font-bold tracking-tight">AL-KAS IMMI</h2>
+            </div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <h1 className="text-4xl font-extrabold leading-tight mb-4 text-indigo-50">
+                Kelola Keuangan <br /> Lebih Terstruktur.
+              </h1>
+              <p className="text-indigo-200 text-sm leading-relaxed max-w-xs">
+                Platform manajemen keuangan eksklusif untuk mendukung efisiensi operasional pengurus IMMI.
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="relative z-10 pt-12">
+            <div className="flex items-center gap-2 text-xs font-medium text-indigo-300 uppercase tracking-[0.2em]">
+              <span className="w-8 h-[1px] bg-indigo-400"></span>
+              Secure Infrastructure
+            </div>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-10 space-y-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Username</label>
-              <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors" size={20} />
+        {/* Sisi Kanan: Form Login */}
+        <div className="w-full md:w-1/2 p-8 md:p-14 bg-white">
+          <div className="mb-10">
+            <h3 className="text-2xl font-bold text-slate-800 mb-2">Selamat Datang</h3>
+            <p className="text-slate-500 text-sm">Silakan masukkan kredensial anda untuk masuk.</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Username</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Masukkan username anda"
-                  className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-800"
+                  placeholder="admin_immi"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800 text-sm"
                   required
                   disabled={busy}
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Password</label>
-              <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors" size={20} />
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-12 pr-14 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-800"
+                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800 text-sm"
                   required
                   disabled={busy}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-600 transition-colors"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={busy}
-            className="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all hover:translate-y-[-2px] active:translate-y-0 flex items-center justify-center gap-3 disabled:opacity-70 disabled:translate-y-0"
-          >
-            {busy ? (
-              <Loader2 className="animate-spin" size={24} />
-            ) : (
-              <>
-                <Lock size={20} />
-                <span>MASUK KE SISTEM</span>
-              </>
-            )}
-          </button>
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full py-3.5 bg-indigo-600 text-white rounded-lg font-bold text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed group"
+            >
+              {busy ? (
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                <>
+                  <span>Masuk ke Dashboard</span>
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </button>
 
-          <p className="text-center text-slate-300 text-[9px] font-bold uppercase tracking-widest">
-            Hanya Pengurus IMMI yang Memiliki Akses
-          </p>
-        </form>
-      </motion.div>
+            <div className="pt-6 border-t border-slate-100">
+              <p className="text-center text-slate-400 text-[10px] font-medium uppercase tracking-[0.15em]">
+                Immi Financial Management System &copy; 2024
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
