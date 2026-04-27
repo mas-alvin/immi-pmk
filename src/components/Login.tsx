@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, User, Eye, EyeOff, Loader2, ShieldCheck } from 'lucide-react';
 
@@ -11,12 +11,20 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (!username || !password) return;
-    await onLogin(username, password);
+    if (!username || !password || isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await onLogin(username, password);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const busy = isLoading || isSubmitting;
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans">
@@ -57,6 +65,7 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
                   placeholder="Masukkan username anda"
                   className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-800"
                   required
+                  disabled={busy}
                 />
               </div>
             </div>
@@ -72,6 +81,7 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
                   placeholder="••••••••"
                   className="w-full pl-12 pr-14 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-800"
                   required
+                  disabled={busy}
                 />
                 <button
                   type="button"
@@ -86,10 +96,10 @@ export const Login = ({ onLogin, isLoading }: LoginProps) => {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={busy}
             className="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all hover:translate-y-[-2px] active:translate-y-0 flex items-center justify-center gap-3 disabled:opacity-70 disabled:translate-y-0"
           >
-            {isLoading ? (
+            {busy ? (
               <Loader2 className="animate-spin" size={24} />
             ) : (
               <>
