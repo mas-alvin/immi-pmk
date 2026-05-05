@@ -29,7 +29,15 @@ type PageID = 'dashboard' | 'iuran' | 'catatan' | 'seller' | 'barang' | 'dompet'
 function App() {
   const { user, isAuthenticated, isLoading: isAuthLoading, login, logout } = useAuth();
   
-  const [activePage, setActivePage] = useState<PageID>('dashboard');
+  const [activePage, setActivePage] = useState<PageID>(() => {
+    return (localStorage.getItem('immi_active_page') as PageID) || 'dashboard';
+  });
+
+  const handlePageChange = (page: PageID) => {
+    setActivePage(page);
+    localStorage.setItem('immi_active_page', page);
+  };
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [bulan, setBulan] = useState(getCurrentMonth());
   const [tahun, setTahun] = useState(new Date().getFullYear().toString());
@@ -93,7 +101,7 @@ function App() {
       {/* Navigation Sidebar */}
       <Sidebar 
         activePage={activePage} 
-        onPageChange={setActivePage} 
+        onPageChange={handlePageChange} 
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
@@ -114,7 +122,7 @@ function App() {
             <AnimatePresence mode="wait">
               {activePage === 'dashboard' && (
                 <motion.div key="dashboard" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                  <BisnisDashboard onNavigateToDompet={() => setActivePage('dompet')} />
+                  <BisnisDashboard onNavigateToDompet={() => handlePageChange('dompet')} />
                 </motion.div>
               )}
 

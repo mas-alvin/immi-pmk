@@ -7,6 +7,8 @@ var MEMBER_SHEET  = "Anggota";
 var CATATAN_SHEET = "Catatan";
 var USER_SHEET    = "Users";       // Sheet baru untuk login
 var SELLER_SHEET  = "Sellers";
+var BARANG_SHEET  = "Barang";
+var VARIAN_SHEET  = "Master_Varian";
 
 // ─────────────────────────────────────────────
 //  ROUTING UTAMA
@@ -43,6 +45,16 @@ function doGet(e) {
     // ── GET SELLERS ─────────────────────────────
     if (action === "getSellers") {
       return jsonResponse({ data: getSellersData() });
+    }
+
+    // ── GET BARANG ──────────────────────────────
+    if (action === "getBarang") {
+      return jsonResponse({ data: getBarangData() });
+    }
+
+    // ── GET VARIAN ──────────────────────────────
+    if (action === "getVariants") {
+      return jsonResponse({ data: getVariantsData() });
     }
 
     // ── GET IURAN (default) ────────────────────
@@ -129,6 +141,25 @@ function doPost(e) {
     }
     if (p.action === "deleteSeller") {
       return jsonResponse(deleteSellerData(p.id));
+    }
+
+    // ── BARANG ACTIONS ─────────────────────────
+    if (p.action === "addBarang") {
+      return jsonResponse(addBarangData(p));
+    }
+    if (p.action === "updateBarang") {
+      return jsonResponse(updateBarangData(p));
+    }
+    if (p.action === "deleteBarang") {
+      return jsonResponse(deleteBarangData(p.id));
+    }
+
+    // ── VARIAN ACTIONS ─────────────────────────
+    if (p.action === "addVariant") {
+      return jsonResponse(addVariantData(p.nama));
+    }
+    if (p.action === "deleteVariant") {
+      return jsonResponse(deleteVariantData(p.id));
     }
 
     throw new Error("Action tidak dikenal: " + p.action);
@@ -395,5 +426,168 @@ function setupSellerSheet() {
   sheet.setColumnWidth(4, 150);
   sheet.setColumnWidth(5, 200);
   sheet.setColumnWidth(6, 100);
+  return sheet;
+}
+
+// ─────────────────────────────────────────────
+//  BARANG MANAGEMENT
+// ─────────────────────────────────────────────
+
+function getBarangData() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(BARANG_SHEET) || setupBarangSheet();
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  
+  var headers = data[0];
+  var rows = data.slice(1);
+  
+  return rows.map(function(r) {
+    var obj = {};
+    headers.forEach(function(h, i) {
+      obj[h.toLowerCase()] = r[i];
+    });
+    return obj;
+  });
+}
+
+function addBarangData(p) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(BARANG_SHEET) || setupBarangSheet();
+  var id = "BRG-" + new Date().getTime();
+  var row = [
+    id, 
+    p.nama_barang, 
+    p.varian, 
+    p.stok_awal || 0, 
+    p.harga_beli || 0, 
+    p.laba || 0, 
+    p.harga_jual || 0
+  ];
+  sheet.appendRow(row);
+  sheet.getRange(sheet.getLastRow(), 1, 1, 7).setBorder(true, true, true, true, true, true);
+  return { status: "success", id: id };
+}
+
+function updateBarangData(p) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(BARANG_SHEET) || setupBarangSheet();
+  var data = sheet.getDataRange().getValues();
+  var rowIndex = -1;
+  
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === p.id) {
+      rowIndex = i + 1;
+      break;
+    }
+  }
+  
+  if (rowIndex === -1) throw new Error("Barang ID tidak ditemukan.");
+  
+  sheet.getRange(rowIndex, 2).setValue(p.nama_barang);
+  sheet.getRange(rowIndex, 3).setValue(p.varian);
+  sheet.getRange(rowIndex, 4).setValue(p.stok_awal);
+  sheet.getRange(rowIndex, 5).setValue(p.harga_beli);
+  sheet.getRange(rowIndex, 6).setValue(p.laba);
+  sheet.getRange(rowIndex, 7).setValue(p.harga_jual);
+  
+  return { status: "success" };
+}
+
+function deleteBarangData(id) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(BARANG_SHEET) || setupBarangSheet();
+  var data = sheet.getDataRange().getValues();
+  var rowIndex = -1;
+  
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === id) {
+      rowIndex = i + 1;
+      break;
+    }
+  }
+  
+  if (rowIndex === -1) throw new Error("Barang ID tidak ditemukan.");
+  
+  sheet.deleteRow(rowIndex);
+  return { status: "success" };
+}
+
+function setupBarangSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.insertSheet(BARANG_SHEET);
+  sheet.getRange("A1:G1")
+    .setValues([["ID", "NAMA_BARANG", "VARIAN", "STOK_AWAL", "HARGA_BELI", "LABA", "HARGA_JUAL"]])
+    .setFontWeight("bold")
+    .setBackground("#d9ead3")
+    .setBorder(true, true, true, true, true, true);
+  
+  sheet.setColumnWidth(1, 120);
+  sheet.setColumnWidth(2, 200);
+  sheet.setColumnWidth(3, 150);
+  sheet.setColumnWidth(4, 100);
+  sheet.setColumnWidth(5, 120);
+  sheet.setColumnWidth(6, 120);
+  sheet.setColumnWidth(7, 120);
+  return sheet;
+}
+
+// ─────────────────────────────────────────────
+//  VARIAN MASTER MANAGEMENT
+// ─────────────────────────────────────────────
+
+function getVariantsData() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(VARIAN_SHEET) || setupVariantSheet();
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  
+  var headers = data[0];
+  var rows = data.slice(1);
+  
+  return rows.map(function(r) {
+    return { id: r[0], nama: r[1] };
+  });
+}
+
+function addVariantData(nama) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(VARIAN_SHEET) || setupVariantSheet();
+  var id = "VAR-" + new Date().getTime();
+  sheet.appendRow([id, nama]);
+  sheet.getRange(sheet.getLastRow(), 1, 1, 2).setBorder(true, true, true, true, true, true);
+  return { status: "success", id: id };
+}
+
+function deleteVariantData(id) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(VARIAN_SHEET) || setupVariantSheet();
+  var data = sheet.getDataRange().getValues();
+  var rowIndex = -1;
+  
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === id) {
+      rowIndex = i + 1;
+      break;
+    }
+  }
+  
+  if (rowIndex === -1) throw new Error("Variant ID tidak ditemukan.");
+  
+  sheet.deleteRow(rowIndex);
+  return { status: "success" };
+}
+
+function setupVariantSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.insertSheet(VARIAN_SHEET);
+  sheet.getRange("A1:B1")
+    .setValues([["ID", "NAMA_VARIAN"]])
+    .setFontWeight("bold")
+    .setBackground("#d9ead3")
+    .setBorder(true, true, true, true, true, true);
+  
+  sheet.setColumnWidth(1, 150);
+  sheet.setColumnWidth(2, 250);
   return sheet;
 }
